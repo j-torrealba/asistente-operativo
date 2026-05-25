@@ -1137,87 +1137,23 @@ Para SEMANA_PRÓXIMA, crear en Google Calendar:
 
 ### SD-5 — ENVÍO DEL BRIEFING SEMANAL
 
-**Canal Slack:** D092HPLLPH9
-**Gmail:** jtorrealba@fundacioninvictus.cl
-**Asunto Gmail:** Apertura Semanal — Semana [dd/mm]–[dd/mm/yyyy]
+**Canal de entrega:** Solo Gmail — jtorrealba@fundacioninvictus.cl
+**Asunto:** Apertura Semanal — Semana [dd/mm]–[dd/mm/yyyy]
+**Acción:** Enviar directamente (no guardar como borrador).
 
-Longitud: Si supera 3800 caracteres, dividir en 2 mensajes: (1) Balance + Prioridades + Organización, (2) Preparaciones + Focos + Correos + Notion.
+El briefing semanal se envía como correo HTML a jtorrealba@fundacioninvictus.cl usando el mismo estándar visual del briefing diario (PASO 5 / PASO 6B): inline-styled, compatible con Gmail, sin `<style>` en `<head>`.
 
-Formato del mensaje Slack:
+Estructura del correo (en este orden):
 
-```
-*━━━*
-
-📊 *Apertura Semanal — [dd/mm] al [dd/mm/yyyy]*
-
-━━━
-
-*📋 Semana pasada — Balance*
-
-✅ Completadas: [N] · ❌ MITs no logradas: [N] · 🔁 Arrastradas: [N]
-[Logros clave en 1–2 líneas]
-[Patrón si existe: ej. "Semana operativa — sin avance estratégico"]
-
-━━━
-
-*🎯 Prioridades semana [dd/mm]–[dd/mm]*
-
-1. [Tarea] — [Día asignado] — [razón ≤8 palabras]
-2. [Tarea] — [Día asignado] — [razón ≤8 palabras]
-...
-(máximo 7)
-
-━━━
-
-*📅 Organización de la semana*
-
-- Lun [dd]: [tipo de día] · MIT: [tarea]
-- Mar [dd]: [tipo de día] · MIT: [tarea]
-- Mié [dd]: [tipo de día] · MIT: [tarea]
-- Jue [dd]: [tipo de día] · MIT: [tarea]
-- Vie [dd]: [tipo de día] · MIT: [tarea]
-
-━━━
-
-*🔖 Lo que más preparación necesita*
-
-- [Reunión] — [dd/mm] — Prep [ALTA/MEDIA]: [qué preparar ≤10 palabras]
-(máximo 3; si no hay: "Sin reuniones de alta preparación esta semana.")
-
-━━━
-
-*🔍 Focos estratégicos*
-
-- [Día] [hora]: [qué avanzar]
-- [Día] [hora]: [qué avanzar]
-(máximo 3; advertir si no hay bloque ≥2h disponible)
-
-━━━
-
-*📬 Correos pendientes de la semana*
-
-- [🔴/🟡] [Remitente] · [Resumen ≤10 palabras] · [Acción]
-(máximo 5; si no hay: "Sin correos pendientes de la semana.")
-
-━━━
-
-*🔄 Notion — Actualización semanal*
-
-- Inbox triado: [N] tareas
-- Día asignado actualizado: [N] tareas
-- Tareas creadas: [N] desde reuniones, [N] desde correos
-- Plan semanal: "Plan por bloques — Semana [dd/mm]–[dd/mm]" creado
-
-━━━
-
-*⚠️ Alertas para la semana* [omitir si no hay]
-
-[lista de alertas]
-
-━━━
-```
-
-**Gmail:** Enviar mismo contenido adaptado a correo. Acción: enviar directamente (no borrador).
+1. Header: "Apertura Semanal — Semana [dd/mm]–[dd/mm/yyyy]"
+2. Balance semana pasada (completadas · no logradas · arrastradas · patrón)
+3. Prioridades de la semana (máx 7, con día asignado y razón)
+4. Organización día a día (tipo de día · MIT por día)
+5. Lo que más preparación necesita (máx 3, con nivel ALTA/MEDIA)
+6. Focos estratégicos (máx 3 bloques; advertir si no hay ≥2h libre)
+7. Correos pendientes de la semana (máx 5)
+8. Actualización Notion (tareas triadas · creadas · Día asignado actualizado)
+9. Alertas para la semana (omitir sección si no hay)
 
 ---
 
@@ -1228,5 +1164,6 @@ Formato del mensaje Slack:
 3. Si Calendar de SEMANA_PRÓXIMA no está disponible, advertir y planificar solo con Notion y Gmail.
 4. Al asignar Día asignado, no superar 3 tareas por día.
 5. Los bloques de foco creados son sugerencias; José puede ajustarlos el lunes.
-6. Si alguna fuente falla, continuar con las demás y reportar con ⚠️ al final del mensaje.
+6. Si alguna fuente falla, continuar con las demás y reportar con ⚠️ al final del correo.
 7. Idioma: Español, tuteo, tono de colega estratégico. Sin saludos corporativos.
+8. Solo Gmail. No enviar a Slack.
