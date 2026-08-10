@@ -746,7 +746,21 @@ El briefing diario se envía **solo por Gmail** (el envío a Slack se eliminó e
 
 - **Asunto:** Briefing — [DÍA_SEMANA] [FECHA_HOY dd/mm/yyyy]
 
-- **Acción:** Enviar directamente (no guardar como borrador). Usar la herramienta de Gmail para enviar. Si la integración de Gmail conectada solo permite crear borradores (sin herramienta de envío directo), créalo como borrador y dilo explícitamente al final del briefing/resumen — no asumas que quedó enviado.
+- **Acción:** Enviar directamente (no guardar como borrador). Usar la herramienta de Gmail para enviar. Si la integración de Gmail conectada solo permite crear borradores (sin herramienta de envío directo), aplica la regla de "borrador rotativo" de abajo — nunca crees uno nuevo sin revisar antes si hay que reemplazar uno viejo.
+
+
+
+**Borrador rotativo (evidencia real, corregir siempre):** Sin herramienta de envío, cada corrida sin control deja un borrador huérfano acumulándose sin límite — ya se confirmó esto en la práctica: para el 09/08 había 8 borradores de "Briefing — [día]" sueltos en Gmail (28/07 en adelante) más 2 de "Apertura Semanal", ninguno enviado ni limpiado. Para no repetirlo:
+
+
+
+1. Antes de crear el borrador, busca en Gmail (`list_drafts`) uno existente con asunto que empiece con "Briefing —" dirigido a jtorrealba@fundacioninvictus.cl.
+
+2. Si existe uno (del día anterior o de una corrida repetida del mismo día): reemplázalo con `update_draft` (mismo `draftId`, nuevo asunto y cuerpo) en vez de crear uno nuevo. Así queda como máximo un borrador de briefing diario vivo a la vez.
+
+3. Si no existe ninguno, créalo con `create_draft`.
+
+4. No hay herramienta para borrar drafts desde aquí — los borradores de días ya cerrados que queden sueltos los tiene que limpiar José manualmente en Gmail. No lo intentes recrear ni "arreglar" borrando el contenido.
 
 
 
@@ -861,6 +875,8 @@ Re-escribe el plan sobre esta página:
 18. **Memoria de correos:** Un hilo con `Secretario/Procesado` y sin actividad nueva nunca se vuelve a clasificar ni a generar borrador, sin importar si José borró el borrador anterior. Ver "GMAIL — ETIQUETAS DE MEMORIA" y PASO 1D/5.
 
 19. **Spam y publicidad:** Nunca crear borrador ni tarea para correos 🗑. Nunca hacer clic en links de "unsubscribe" por cuenta propia — solo listar el remitente/dominio en "Sugeridos para darte de baja" y dejar que José decida.
+
+20. **Borrador rotativo del briefing:** Un solo borrador vivo por cadencia (diario, semanal). Antes de crear uno nuevo, buscar el anterior por asunto y reemplazarlo con `update_draft`. Nunca dejar que se acumulen — ver PASO 6 y SD-5.
 
 ---
 
@@ -1018,7 +1034,7 @@ Para SEMANA_PRÓXIMA, crear en Google Calendar:
 
 **Canal de entrega:** Solo Gmail — jtorrealba@fundacioninvictus.cl
 **Asunto:** Apertura Semanal — Semana [dd/mm]–[dd/mm/yyyy]
-**Acción:** Enviar directamente (no guardar como borrador). Si la integración de Gmail conectada solo permite crear borradores, créalo como borrador y dilo explícitamente al final del resumen — no asumas que quedó enviado.
+**Acción:** Enviar directamente (no guardar como borrador). Si la integración de Gmail conectada solo permite crear borradores, aplica la misma regla de "borrador rotativo" del PASO 6 diario: busca con `list_drafts` un borrador existente con asunto que empiece con "Apertura Semanal —" dirigido a jtorrealba@fundacioninvictus.cl y reemplázalo con `update_draft`; solo usa `create_draft` si no hay ninguno. Dilo explícitamente al final del resumen — no asumas que quedó enviado.
 
 El briefing semanal se envía como correo HTML a jtorrealba@fundacioninvictus.cl usando el mismo estándar visual del briefing diario (PASO 5 / PASO 6): inline-styled, compatible con Gmail, sin `<style>` en `<head>`.
 
