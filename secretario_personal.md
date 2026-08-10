@@ -1,8 +1,8 @@
-# Chief of Staff Digital — Briefing Diario v2.5.2
+# Chief of Staff Digital — Briefing Diario v2.6
 
 
 
-**Versión:** 2.5.2 — 10 agosto 2026 (memoria de correos movida a Notion — el conector de Gmail no permite etiquetas)
+**Versión:** 2.6 — 10 agosto 2026 (elimina la página "Plan por bloques" en Notion, diaria y semanal)
 
 
 
@@ -167,8 +167,6 @@ Todo hilo evaluado en PASO 1D recibe una fila aquí, sin excepción — sea cual
     - Tareas creadas desde correos del fin de semana.
 
     - Día asignado L-V distribuido.
-
-    - Plan por bloques — Semana creado en Notion.
 
     - Eventos de Calendar mapeados para la semana.
 
@@ -799,38 +797,6 @@ Formato del mensaje: breve, máximo 10 líneas, mismo canal.
 
 
 
-## PASO 8 — OUTLINE PLANIFICACIÓN DEL DÍA
-
-
-
-Entra a Notion "sistema de trabajo".
-
-
-
-Tomando el esquema de "sistema operativo semanal":
-
-
-
-[](https://www.notion.so/1eeb219e3e6d80dcb748c97cc833b992?pvs=21)
-
-
-
-Re-escribe el plan sobre esta página:
-
-
-
-[](https://www.notion.so/1eeb219e3e6d80dcb748c97cc833b992?pvs=21)
-
-
-
-- Renombra la página "Plan por bloques — [día de la semana] [dd/mm]"
-
-- Reescribir el plan para el día correspondiente
-
-- **Lunes:** considera como insumo la página "Plan por bloques — Semana [dd/mm]–[dd/mm]" creada por la apertura del domingo (buscarla en la misma base).
-
-
-
 ## REGLAS FINALES
 
 
@@ -1006,15 +972,12 @@ Ejecutar en este orden:
 2. **Actualizar Día asignado:** Para las 5–7 tareas priorizadas (SD-2A), actualizar campo Día asignado (Lunes / Martes / Miércoles / Jueves / Viernes) según la distribución de SD-2B.
 3. **Crear tareas faltantes:** Compromisos de reuniones de SEMANA_PASADA sin tarea asociada en Notion (detectados en SD-1B). Aplicar misma lógica y límites del PASO 2A diario.
 4. **Crear tareas desde correos:** Correos 🔴 o 🟡 de VENTANA_GMAIL_SEMANA sin tarea asociada. Aplicar misma lógica del PASO 2B diario. Correos 🟢 → aplicar 2B-bis (tarea de seguimiento, sin borrador).
-5. **Crear página "Plan por bloques — Semana [dd/mm]–[dd/mm]"** en la base Notion "sistema de trabajo", usando como plantilla el "sistema operativo semanal". Incluir:
-   - Balance semana pasada (2–3 líneas: completadas, no logradas, patrón).
-   - Prioridades de la semana (lista de 5–7 tareas con día asignado).
-   - Distribución día a día (tipo de día + tareas asignadas + reuniones clave).
-   - Reuniones con alta preparación requerida.
-   - Focos estratégicos (día, hora, tarea).
-   - Alertas o riesgos identificados.
 
 **Límite:** Máximo 5 tareas nuevas creadas en total (reuniones + correos). Aplicar verificación anti-duplicados igual que en el briefing diario.
+
+
+
+**Nota (v2.6):** Ya no se crea página "Plan por bloques" en Notion — el balance, prioridades, distribución día a día, preparación y focos estratégicos de la semana van solo en el correo de SD-5. Menos un artefacto que mantener sincronizado con el correo.
 
 ---
 
