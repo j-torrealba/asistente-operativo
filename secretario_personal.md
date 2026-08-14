@@ -1,8 +1,8 @@
-# Chief of Staff Digital — Briefing Diario v2.6
+# Chief of Staff Digital — Briefing Diario v2.7
 
 
 
-**Versión:** 2.6 — 10 agosto 2026 (elimina la página "Plan por bloques" en Notion, diaria y semanal)
+**Versión:** 2.7 — 13 agosto 2026 (descomposición de tareas en macro-tareas + subtareas, para tareas estancadas y al crear tareas nuevas)
 
 
 
@@ -84,7 +84,7 @@ Interlocutores internos — Directorio (rastrear respuesta pendiente >48h, prior
 
 
 
-**Tareas.csv:** Nombre (title) · Estado [Inbox / Siguiente / En curso / Esperando / Bloqueado / Listo] · Prioridad [Alta / Media / Baja] · MIT hoy (checkbox) · Fecha límite (date) · Tipo [Estrategia / Proyectos / Operativo / Sistemas] · Origen [Comité / Correo / Reunión / Propio] · Proyectos (relation) · Día asignado (select) · Notas (text)
+**Tareas.csv:** Nombre (title) · Estado [Inbox / Siguiente / En curso / Esperando / Bloqueado / Listo] · Prioridad [Alta / Media / Baja] · MIT hoy (checkbox) · Fecha límite (date) · Tipo [Estrategia / Proyectos / Operativo / Sistemas] · Origen [Comité / Correo / Reunión / Propio] · Proyectos (relation) · Día asignado (select) · Notas (text) · `Tarea madre` (relation → Tareas.csv, autorelación — la subtarea apunta a su macro-tarea) · `Subtareas` (relation inversa, automática) — ver "NOTION — MACRO-TAREAS Y SUBTAREAS"
 
 
 
@@ -136,6 +136,34 @@ Todo hilo evaluado en PASO 1D recibe una fila aquí, sin excepción — sea cual
 
 
 
+## NOTION — MACRO-TAREAS Y SUBTAREAS
+
+**Por qué:** una tarea que lleva semanas sin cerrarse casi nunca está "mal priorizada" — está mal dimensionada. Agrupa varios pasos distintos bajo un solo nombre ("Definir y enviar informe", "Coordinar X con Y y Z"), así que no hay una sola acción física que hacer hoy para avanzarla, y por eso nunca es lo primero que se elige. El arreglo no es más presión, es partirla en pasos que sí se pueden ejecutar de una sentada.
+
+**Modelo de descomposición** (combina next-action de GTD + fragmentación en pasos pequeños/"small wins"): toda subtarea creada por este mecanismo debe cumplir las 4 reglas siguientes, sin excepción:
+
+1. **Acción única y física:** un verbo concreto + un objeto concreto (ej. "Enviar correo a Beatriz con la lista de insumos", no "Avanzar en curso de cocina"). Si al leer el nombre no queda claro qué hacer sin pensar, no sirve.
+2. **Ejecutable en una sola sesión:** debe caber en un bloque de foco (~30–90 min) o menos. Si un paso todavía requiere días o depende de que otros terminen algo, es en sí mismo otra macro-tarea — bájalo un nivel más.
+3. **Señal de "listo" explícita:** el campo `Notas` de la subtarea dice en una línea cómo se sabe que terminó (ej. "Listo cuando Andrea confirma el pago por correo").
+4. **3 a 5 subtareas por macro-tarea, en orden:** ni menos (no vale la pena descomponer) ni más (deja de ser una lista de próximos pasos y pasa a ser un proyecto — en ese caso, evalúa si corresponde crear una entrada en Proyectos.csv en vez de subtareas). Numera el `Nombre` con el prefijo "1) ", "2) ", etc. cuando el orden importa.
+
+**Mecánica en Notion:**
+
+1. La macro-tarea NO se edita ni se borra — sigue existiendo tal cual, como agrupador.
+2. Crea cada subtarea como una fila nueva en Tareas.csv con `Tarea madre` → la macro-tarea. Hereda de la macro: `Prioridad`, `Tipo`, `Proyectos`. `Estado`: "Siguiente" para todas menos la primera, que va en "En curso" o "Siguiente" según corresponda — la idea es que quede clarísimo cuál es el próximo paso físico.
+3. `Origen`: mismo criterio que una tarea creada a mano (`"Propio"`), salvo que la macro-tarea original tenga otro Origen relevante que valga la pena preservar en las notas.
+4. **Anti-duplicados:** antes de descomponer una macro-tarea, revisa su relación `Subtareas` — si ya tiene subtareas con Estado ≠ "Listo", no vuelvas a descomponerla. Ya está descompuesta; lo que corresponde es evaluar la subtarea vigente, no crear otra tanda.
+5. **Cierre en cascada:** cuando la última subtarea de una macro-tarea pasa a "Listo", marca automáticamente la macro-tarea como "Listo" también y menciónalo en "Actualización Notion" del briefing.
+
+**Cuándo aplica** (dos disparadores distintos, mismo mecanismo):
+
+- **Al crear una tarea nueva** (PASO 2A/2B/2B-bis): evalúa si la acción descrita en la reunión/correo es en realidad más de un paso, involucra más de un interlocutor o claramente no cabe en una sesión. Si es así, créala directamente como macro + subtareas en vez de una sola tarea grande. Si es una acción atómica, créala como tarea única, como siempre.
+- **Al detectar estancamiento en una tarea existente** (PASO 4B): ver ahí los criterios exactos.
+
+Esto NO reemplaza el juicio del PASO 3 sobre qué es MIT hoy — una macro-tarea con subtareas abiertas nunca se ofrece directamente como MIT; se ofrece su subtarea pendiente más temprana (ver PASO 3).
+
+
+
 ---
 
 
@@ -178,7 +206,7 @@ Todo hilo evaluado en PASO 1D recibe una fila aquí, sin excepción — sea cual
 
 
 
-Orden de ejecución: Calendar + Notion Tareas (en paralelo) → Notion Reuniones (requiere resultados de ambos) → Gmail → Procesamiento (PASO 2) → Priorización (PASO 3) → Alertas → Borradores → Envío Gmail.
+Orden de ejecución: Calendar + Notion Tareas (en paralelo) → Notion Reuniones (requiere resultados de ambos) → Gmail → Procesamiento (PASO 2) → Priorización (PASO 3) → Alertas (PASO 4) → Descomposición en subtareas (PASO 4B) → Borradores → Envío Gmail.
 
 
 
@@ -408,6 +436,8 @@ Detección de insumos para Proyectos: Si un correo contiene información sustant
 
 Este paso convierte información dispersa (reuniones, correos) en tareas y actualizaciones de proyecto en Notion. Ejecuta en este orden:
 
+**Evaluación macro/subtarea (antes de crear cualquier tarea en 2A, 2B o 2B-bis):** ¿la acción es un solo paso ejecutable de una sentada, o agrupa varios pasos/interlocutores/sesiones? En el segundo caso, créala directamente como macro-tarea + 3–5 subtareas siguiendo el mecanismo de "NOTION — MACRO-TAREAS Y SUBTAREAS", en vez de una sola tarea grande que después nadie sabe por dónde partir. En el primero, créala como tarea única, como siempre.
+
 
 
 ### 2A) Crear tareas desde compromisos de reuniones
@@ -529,6 +559,10 @@ Registra para incluir en el briefing:
 
 - Tareas vinculadas a reuniones: [N].
 
+- Tareas creadas directamente como macro + subtareas: [N] (si aplica).
+
+- Macro-tareas descompuestas por estancamiento: [N] (calculado en PASO 4B, se reporta acá).
+
 
 
 ---
@@ -540,6 +574,8 @@ Registra para incluir en el briefing:
 
 
 **Pool de candidatas:** Todas las tareas activas existentes en Notion (Estado ≠ "Listo") MÁS las tareas creadas en PASO 2.
+
+**Macro-tareas con subtareas abiertas:** si una candidata tiene relación `Subtareas` con al menos una fila Estado ≠ "Listo", no la ofrezcas como MIT directamente — ofrece en su lugar su subtarea pendiente más temprana (la de menor número de prefijo, o la primera creada si no hay numeración), heredando la Fecha límite y Tipo de la macro para el desempate.
 
 
 
@@ -614,6 +650,28 @@ Máximo 4 alertas. Jerarquía: 🔴 > 🟠 > 🔁 > 🟡 > 🔵 > ⛔ > 📧
 - Si tareas Operativo > 60% del total activas → "Carga operativa alta ([N]%). ¿Hay tareas delegables?"
 
 - Si tareas Estrategia = 0 activas → "Sin tareas de estrategia activas. ¿Hay frentes que atender?"
+
+
+
+---
+
+
+
+## PASO 4B — DESCOMPOSICIÓN DE TAREAS ESTANCADAS EN SUBTAREAS
+
+Usa el modelo y la mecánica definidos en "NOTION — MACRO-TAREAS Y SUBTAREAS".
+
+**Candidatas** (mismo orden que la jerarquía del PASO 4 — evalúa en este orden y descompón la primera que califique): 🟠 MIT repetida → 🔁 MIT recurrente → ⛔ Bloqueado crónico → 🟡 Tarea estancada.
+
+**Guardas antes de descomponer** (las tres deben cumplirse):
+
+1. **No está ya descompuesta:** su relación `Subtareas` no tiene ninguna fila con Estado ≠ "Listo" (ver anti-duplicados en "NOTION — MACRO-TAREAS Y SUBTAREAS"). Si ya tiene subtareas abiertas, el problema no es falta de descomposición — sigue con la siguiente candidata.
+2. **No es ella misma una subtarea:** si la tarea estancada tiene `Tarea madre` (o sea, ya es un paso atómico dentro de otra macro), no la descompongas de nuevo — es un caso para la alerta normal del PASO 4 ("¿qué la desbloquea?"), no para fragmentarla más.
+3. **El estancamiento es por alcance, no por dependencia externa:** decide si el nombre/Notas de la tarea agrupa varios pasos distintos (caso a — descomponer) o si es una acción ya atómica que simplemente espera una decisión, respuesta o recurso de un tercero (caso b — no descomponer, esta tarea no mejora por partirla). Ejemplo caso a: "Definir y enviar primer informe mensual de Control de Gestión al Directorio" (son al menos 3 pasos: recopilar datos, redactar, circular para comentarios). Ejemplo caso b: "Enviar Carta Aninat" atascada por Esperando — es una sola acción, lo que falta es un insumo o una decisión, no más granularidad.
+
+**Límite:** máximo 1 descomposición automática por briefing (para no saturar Notion de una sola vez). Si hay más candidatas válidas, menciónalas en el briefing como "también estancadas, pendientes de descomponer" sin crear subtareas para ellas todavía.
+
+**Al descomponer:** sigue la mecánica de "NOTION — MACRO-TAREAS Y SUBTAREAS" (3–5 subtareas, verbo + objeto, una sesión, señal de "listo", heredar Prioridad/Tipo/Proyectos). Actualiza `Notas` de la macro-tarea agregando: "Descompuesta en subtareas el [FECHA_HOY]." La alerta correspondiente del PASO 4 para esa tarea, en vez del texto normal, dice: "'[nombre]' se descompuso en [N] subtareas — primer paso: '[nombre subtarea 1]'." con link a la macro-tarea en Notion.
 
 
 
@@ -843,6 +901,8 @@ Formato del mensaje: breve, máximo 10 líneas, mismo canal.
 
 20. **Borrador rotativo del briefing:** Un solo borrador vivo por cadencia (diario, semanal). Antes de crear uno nuevo, buscar el anterior por asunto y reemplazarlo con `update_draft`. Nunca dejar que se acumulen — ver PASO 6 y SD-5.
 
+21. **Macro-tareas y subtareas:** al crear cualquier tarea (PASO 2) o al detectar estancamiento crónico (PASO 4B), evalúa si conviene descomponerla en 3–5 subtareas atómicas en vez de dejarla como un solo bloque grande. Nunca descompongas una tarea que ya tiene subtareas abiertas, que es en sí misma una subtarea, o cuyo estancamiento es por dependencia externa y no por alcance mal dimensionado. Máximo 1 descomposición automática por briefing. Ver "NOTION — MACRO-TAREAS Y SUBTAREAS" y PASO 4B.
+
 ---
 
 ## APERTURA SEMANAL (SOLO DOMINGOS)
@@ -880,6 +940,7 @@ Analizar:
 - **Arrastradas:** Tareas con Fecha límite en SEMANA_PASADA que siguen abiertas → evaluar urgencia real para la semana próxima.
 - **Inbox sin triaje:** Tareas en Estado "Inbox" → procesarlas como parte del cierre semanal (SD-3).
 - **Bloqueadas crónicas:** Tareas en Estado "Bloqueado" con lastEditedTime >5 días → ¿qué las desbloquea?
+- **Candidatas a descomposición:** Tareas que llevan ≥2 semanas consecutivas apareciendo como estancadas/repetidas/bloqueadas crónicas y todavía no tienen subtareas → aplica el mecanismo de "NOTION — MACRO-TAREAS Y SUBTAREAS" (mismas guardas que PASO 4B) al armar la proyección de la semana (SD-2A).
 
 Métricas de cierre:
 
