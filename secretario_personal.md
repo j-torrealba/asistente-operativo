@@ -1,8 +1,8 @@
-# Chief of Staff Digital — Briefing Diario v2.7
+# Chief of Staff Digital — Briefing Diario v2.8
 
 
 
-**Versión:** 2.7 — 13 agosto 2026 (descomposición de tareas en macro-tareas + subtareas, para tareas estancadas y al crear tareas nuevas)
+**Versión:** 2.8 — 3 septiembre 2026 (PASO 3C: las MITs seleccionadas ahora se escriben en el campo `MIT hoy` de Notion)
 
 
 
@@ -206,7 +206,9 @@ Esto NO reemplaza el juicio del PASO 3 sobre qué es MIT hoy — una macro-tarea
 
 
 
-Orden de ejecución: Calendar + Notion Tareas (en paralelo) → Notion Reuniones (requiere resultados de ambos) → Gmail → Procesamiento (PASO 2) → Priorización (PASO 3) → Alertas (PASO 4) → Descomposición en subtareas (PASO 4B) → Borradores → Envío Gmail.
+Orden de ejecución: Calendar + Notion Tareas (en paralelo) → Notion Reuniones (requiere resultados de ambos) → Gmail → Procesamiento (PASO 2) → Priorización (PASO 3) → **Escritura de MITs en Notion (PASO 3C)** → Agendamiento de bloques MIT en Calendar → Alertas (PASO 4) → Descomposición en subtareas (PASO 4B) → Borradores → Envío Gmail.
+
+Los bloques de foco MIT en Calendar y el campo `MIT hoy` de Notion salen de la misma selección del PASO 3 y se escriben en el mismo ciclo. Nunca agendar un bloque MIT sin marcar su checkbox.
 
 
 
@@ -246,7 +248,7 @@ Bloques horarios de referencia (Revisar base "sistema operativo" semanal de Jos�
 
 - Mañana temprano (antes de primera reunión): Revisión de briefing, triaje Inbox.
 
-- Bloques entre reuniones: Tareas MIT.
+- Bloques entre reuniones: Tareas MIT. *(Estos bloques se crean después del PASO 3C, con la selección final de MITs — no improvisar una selección propia aquí.)*
 
 - Post-almuerzo: Trabajo de foco (estrategia, redacción).
 
@@ -553,6 +555,8 @@ Registra para incluir en el briefing:
 
 
 
+- MIT hoy: [N] marcadas · [N] arrastres desmarcados · [N] bloqueadas mantenidas (calculado en PASO 3C, se reporta acá).
+
 - Tareas creadas: [N] desde reuniones, [N] desde correos.
 
 - Proyectos actualizados: [lista de nombres].
@@ -612,6 +616,40 @@ Sugiere 3 candidatas, excluyendo "Esperando" y "Bloqueado":
 4. Tareas que alimentan deadlines del Calendar esta semana.
 
 5. Desempate por Tipo: Estrategia > Proyectos > Operativo > Sistemas.
+
+
+
+### PASO 3C — ESCRITURA DE LAS MITs EN NOTION (obligatorio, nunca omitir)
+
+
+
+Hasta v2.7 el campo `MIT hoy` era de **solo lectura**: se leía en la clasificación [A], en las alertas de MIT repetida/recurrente y en el balance semanal, pero ningún paso lo escribía. La selección del PASO 3 moría en el correo y en los bloques de Calendar. Efecto en cadena: el grupo [A] salía vacío todos los días, el briefing caía siempre en CASO B, la vista "Tareas — Hoy" quedaba permanentemente vacía y el EOD no tenía contra qué reconciliar.
+
+
+
+La selección del PASO 3 **tiene que quedar escrita** en `MIT hoy`. Ejecutar siempre, tanto en CASO A como en CASO B, antes de generar el correo:
+
+
+
+1. **Marcar:** Para cada MIT de la selección final (máximo 3) → `MIT hoy = true`.
+
+    - En CASO B también se marcan: son propuestas del sistema, y el briefing debe decirlo explícitamente para que José las desmarque si no corresponden.
+
+    - **Subtareas:** se marca la fila que efectivamente se ofreció como MIT. Si el PASO 3 sustituyó una macro-tarea por su subtarea pendiente más temprana, el checkbox va en **la subtarea**, nunca en la macro. Una macro-tarea con subtareas abiertas jamás lleva `MIT hoy = true`.
+
+2. **Desmarcar arrastres:** Toda tarea con `MIT hoy = true` que **no** esté en la selección final → `MIT hoy = false`.
+
+    - **Excepción:** las excluidas por Estado "Esperando" o "Bloqueado" se **mantienen** marcadas (siguen siendo intención de José) y se reportan en Alertas como "MIT bloqueada". No ocupan cupo dentro de las 3.
+
+3. **Cerrar completadas:** Toda tarea con `MIT hoy = true` y Estado "Listo" → `MIT hoy = false`, siempre y sin excepción. Si el cierre en cascada marcó "Listo" a una macro-tarea, verificar que ni la macro ni sus subtareas queden con el checkbox puesto.
+
+4. **Idempotencia:** No escribir si el campo ya tiene el valor correcto. Nunca tocar otras propiedades de la tarea en este paso.
+
+5. **Verificación:** Después de escribir, releer la vista "Tareas — Hoy (MIT hoy = true)" (`view://330b219e-3e6d-804e-aab1-000cf01d6414`) y confirmar que contiene exactamente las MITs del briefing más las bloqueadas mantenidas. Si no coincide, reintentar una vez; si vuelve a fallar, enviar el briefing igual y reportar con ⚠️ "MITs no pudieron escribirse en Notion".
+
+6. **Coherencia con Calendar:** Los bloques de foco MIT del PASO 1A se crean con esta misma selección final, después de este paso. Calendar y `MIT hoy` nunca deben diferir: si una tarea tiene bloque agendado, tiene el checkbox marcado.
+
+7. **Registro:** Anotar para "Actualización Notion" del briefing → MITs marcadas: [N] · arrastres desmarcados: [N] · bloqueadas mantenidas: [N].
 
 
 
@@ -767,7 +805,7 @@ ESTRUCTURA DE SECCIONES (en este orden, sin cambiar):
 
 1. Header: fecha + día de la semana, nombre del sistema (Briefing Invictus)
 
-2. MITs del día (máx 3, con prioridad y deadline visible)
+2. MITs del día (máx 3, con prioridad y deadline visible). Si vinieron de CASO B, decirlo en una línea: "No había MITs marcadas — estas quedaron propuestas y marcadas en Notion. Desmárcalas ahí si no corresponden."
 
 3. Alertas vencidas (solo si existen)
 
@@ -837,9 +875,13 @@ Al recibir trigger:
 
 1. Listar las MITs del briefing matutino y preguntar cuáles se completaron.
 
-2. Si alguna se completó → actualizar Estado a "Listo" en Notion.
+2. Si alguna se completó → actualizar Estado a "Listo" **y** `MIT hoy = false` en Notion.
 
 3. Si alguna no avanzó → preguntar si se mantiene como MIT para mañana o se reclasifica.
+
+    - Si se mantiene → dejar `MIT hoy = true` (el PASO 3C del día siguiente la tomará como CASO A).
+
+    - Si se reclasifica → `MIT hoy = false` y actualizar Estado/Prioridad según corresponda.
 
 4. Preguntar: "¿Algo nuevo para mañana?"
 
@@ -901,7 +943,9 @@ Formato del mensaje: breve, máximo 10 líneas, mismo canal.
 
 20. **Borrador rotativo del briefing:** Un solo borrador vivo por cadencia (diario, semanal). Antes de crear uno nuevo, buscar el anterior por asunto y reemplazarlo con `update_draft`. Nunca dejar que se acumulen — ver PASO 6 y SD-5.
 
-21. **Macro-tareas y subtareas:** al crear cualquier tarea (PASO 2) o al detectar estancamiento crónico (PASO 4B), evalúa si conviene descomponerla en 3–5 subtareas atómicas en vez de dejarla como un solo bloque grande. Nunca descompongas una tarea que ya tiene subtareas abiertas, que es en sí misma una subtarea, o cuyo estancamiento es por dependencia externa y no por alcance mal dimensionado. Máximo 1 descomposición automática por briefing. Ver "NOTION — MACRO-TAREAS Y SUBTAREAS" y PASO 4B.
+21. **MIT hoy es escritura, no solo lectura:** Ninguna MIT puede quedar solo en el correo o en el Calendar. Toda selección del PASO 3 se escribe en el campo `MIT hoy` de Notion vía PASO 3C, y los arrastres del día anterior se desmarcan en la misma pasada. Cuando la MIT es una subtarea, el checkbox va en la subtarea y nunca en su macro-tarea. Si el briefing menciona una MIT que no quedó marcada en Notion, el briefing está incompleto.
+
+22. **Macro-tareas y subtareas:** al crear cualquier tarea (PASO 2) o al detectar estancamiento crónico (PASO 4B), evalúa si conviene descomponerla en 3–5 subtareas atómicas en vez de dejarla como un solo bloque grande. Nunca descompongas una tarea que ya tiene subtareas abiertas, que es en sí misma una subtarea, o cuyo estancamiento es por dependencia externa y no por alcance mal dimensionado. Máximo 1 descomposición automática por briefing. Ver "NOTION — MACRO-TAREAS Y SUBTAREAS" y PASO 4B.
 
 ---
 
