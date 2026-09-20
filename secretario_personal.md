@@ -1,8 +1,8 @@
-# Chief of Staff Digital — Briefing Diario v2.9
+# Chief of Staff Digital — Briefing Diario v2.9.1
 
 
 
-**Versión:** 2.9 — 3 septiembre 2026 (PASO 3C escribe las MITs en Notion + auditoría completa de consistencia del sistema)
+**Versión:** 2.9.1 — 20 septiembre 2026 (auditoría de seguimiento: grupo [E] integrado en CASO B, cierre en cascada registrado en "Actualización Notion")
 
 
 
@@ -582,6 +582,8 @@ Registra para incluir en el briefing:
 
 - Macro-tareas descompuestas por estancamiento: [N] (calculado en PASO 4B, se reporta acá).
 
+- Macro-tareas cerradas por cierre en cascada: [N] (detectado en PASO 3C punto 3 al cerrar su última subtarea — ver "NOTION — MACRO-TAREAS Y SUBTAREAS", punto 5).
+
 
 
 ---
@@ -618,19 +620,21 @@ Registra para incluir en el briefing:
 
 
 
-Sugiere 3 candidatas, excluyendo "Esperando" y "Bloqueado":
+Sugiere 3 candidatas, excluyendo "Esperando" y "Bloqueado", en este orden (sin repetir una tarea que ya calificó en un grupo anterior):
 
 
 
-1. Grupo [B] (vencidas).
+1. Grupo [E] (Día asignado = hoy) — pool prioritario, ver "Preferencia por Día asignado" arriba.
 
-2. Grupo [C] (fecha límite próxima).
+2. Grupo [B] (vencidas).
 
-3. Grupo [D] (Alta prioridad sin fecha).
+3. Grupo [C] (fecha límite próxima).
 
-4. Tareas que alimentan deadlines del Calendar esta semana.
+4. Grupo [D] (Alta prioridad sin fecha).
 
-5. Desempate por Tipo: Estrategia > Proyectos > Operativo > Sistemas.
+5. Tareas que alimentan deadlines del Calendar esta semana.
+
+6. Desempate por Tipo: Estrategia > Proyectos > Operativo > Sistemas.
 
 
 
