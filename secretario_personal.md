@@ -154,7 +154,7 @@ Todo hilo evaluado en PASO 1D recibe una fila aquí, sin excepción — sea cual
 **Mecánica en Notion:**
 
 1. La macro-tarea NO se edita ni se borra — sigue existiendo tal cual, como agrupador.
-2. Crea cada subtarea como una fila nueva en Tareas.csv con `Tarea madre` → la macro-tarea. Hereda de la macro: `Prioridad`, `Tipo`, `Proyectos`. `Estado`: "Siguiente" para todas menos la primera, que va en "En curso" o "Siguiente" según corresponda — la idea es que quede clarísimo cuál es el próximo paso físico.
+2. Crea cada subtarea como una fila nueva en Tareas.csv con `Tarea madre` → la macro-tarea. Hereda de la macro: `Prioridad`, `Tipo`, `Proyectos`. `Estado`: "Siguiente" para todas menos la primera, que va en "En curso" o "Siguiente" según corresponda — la idea es que quede clarísimo cuál es el próximo paso físico. `Fecha límite`: no se hereda igual para todas — se distribuye en cascada a lo largo del tramo disponible, ver "NOTION — ASIGNACIÓN AUTOMÁTICA DE FECHA LÍMITE".
 3. `Origen`: mismo criterio que una tarea creada a mano (`"Propio"`), salvo que la macro-tarea original tenga otro Origen relevante que valga la pena preservar en las notas.
 4. **Anti-duplicados:** antes de descomponer una macro-tarea, revisa su relación `Subtareas` — si ya tiene subtareas con Estado ≠ "Listo", no vuelvas a descomponerla. Ya está descompuesta; lo que corresponde es evaluar la subtarea vigente, no crear otra tanda.
 5. **Cierre en cascada:** cuando la última subtarea de una macro-tarea pasa a "Listo", marca automáticamente la macro-tarea como "Listo" también y menciónalo en "Actualización Notion" del briefing.
@@ -165,6 +165,48 @@ Todo hilo evaluado en PASO 1D recibe una fila aquí, sin excepción — sea cual
 - **Al detectar estancamiento en una tarea existente** (PASO 4B): ver ahí los criterios exactos.
 
 Esto NO reemplaza el juicio del PASO 3 sobre qué es MIT hoy — una macro-tarea con subtareas abiertas nunca se ofrece directamente como MIT; se ofrece su subtarea pendiente más temprana (ver PASO 3).
+
+
+
+---
+
+
+
+## NOTION — ASIGNACIÓN AUTOMÁTICA DE FECHA LÍMITE
+
+**Por qué:** una tarea sin `Fecha límite` no entra nunca al grupo [C] (Urgentes) y depende de quedar en [D] (Alta sin fecha) para no perderse — y solo si además es Prioridad Alta. Todo lo demás (Media, Baja, sin fecha) queda a la deriva: no compite por espacio en ningún día, no aparece como vencida, y solo se rescata si alguien la marca MIT a mano. El síntoma es una Inbox y un "Siguiente" que crecen sin que el sistema tenga cómo priorizarlos. La regla de fondo: **ninguna tarea que pase por PASO 2 (2A/2B/2B-bis) o por la descomposición en subtareas queda sin `Fecha límite`.**
+
+**Cuándo se calcula vs. cuándo se respeta la explícita:**
+
+1. Si la reunión o el correo de origen especifica una fecha o plazo concreto → usar esa fecha tal cual. Una fecha explícita nunca se sobreescribe con una calculada.
+2. Si no hay fecha explícita → calcular una con el mecanismo de abajo, y dejar constancia en `Notas`: "Fecha límite calculada automáticamente."
+
+**Mecanismo de cálculo (tareas nuevas sin fecha explícita):**
+
+a. **Ventana base según Prioridad** (días hábiles desde FECHA_HOY, saltando fines de semana y feriados chilenos — misma lista del PASO 0):
+   - Alta: 3 días hábiles.
+   - Media: 7 días hábiles.
+   - Baja: 14 días hábiles.
+
+b. **Fecha candidata inicial:** FECHA_HOY + ventana base.
+
+c. **Chequeo de carga:** contar cuántas tareas activas (Estado ≠ "Listo") ya tienen `Fecha límite` = fecha candidata.
+   - Menos de 3 tareas ese día → asignar esa fecha.
+   - 3 o más → correr a la fecha candidata al siguiente día hábil y repetir el chequeo. Solo se avanza, nunca se retrocede a una fecha anterior a la ventana base de (a).
+   - Tope de corrimiento: máximo 5 días hábiles por encima de la ventana base. Si a los 5 días sigue sin haber hueco (semana excepcionalmente cargada), asignar la fecha con menos tareas dentro de ese rango — nunca dejar la tarea sin fecha por no encontrar un día "ideal".
+
+d. **Ajuste por urgencia percibida:** si la tarea viene de una reunión/correo con interlocutor clave (ver Contexto Permanente), o es Prioridad Alta con Origen "Correo" 🔴, restar 1 día hábil al resultado de (c) — sin bajar de FECHA_HOY + 1.
+
+e. **Fines de semana y feriados:** si el resultado cae en sábado, domingo o feriado chileno, mover al siguiente día hábil.
+
+**Para subtareas de una macro-tarea** (en vez de una sola fecha igual para todas, se distribuye en cascada):
+
+1. Fijar el techo: la `Fecha límite` de la macro-tarea (si ya la tiene, explícita o calculada). Si la macro no tiene fecha, calcularla primero con el mecanismo de arriba usando su Prioridad.
+2. Repartir las 3–5 subtareas, en su orden numerado, a lo largo del tramo [FECHA_HOY, Fecha límite de la macro], dejando al menos 1 día hábil entre subtareas consecutivas. La última subtarea vence en la misma fecha que la macro (o antes, si sobra margen).
+3. Si el tramo disponible tiene menos días hábiles que subtareas, comprimir lo más uniforme posible y priorizar que la primera subtarea (el próximo paso físico) tenga la fecha más próxima — es la que hay que ejecutar ya.
+4. Aplica la misma regla de carga de (c): si al día que le tocaría a una subtarea ya tiene ≥3 tareas con esa `Fecha límite`, correr solo esa subtarea al siguiente día hábil dentro del tramo disponible, sin mover a las demás.
+
+**Reporte:** en "Actualización Notion" del briefing (PASO 2D), sumar cuántas `Fecha límite` fueron calculadas automáticamente (vs. explícitas) en la corrida: "Fecha límite calculada automáticamente: [N] tareas."
 
 
 
@@ -266,18 +308,20 @@ Bloques horarios de referencia (Revisar base "sistema operativo" semanal de Jos�
 
 
 
-**Sistema de colores para eventos en Google Calendar** — Aplicar de forma consistente en todos los eventos creados por el secretario:
+**Sistema de colores para eventos en Google Calendar** — Aplicar de forma consistente en todos los eventos creados por el secretario. La lógica: el azul (acento institucional del briefing, #1a3a5c) ancla la familia de categorías "estructurales" del día — rutina, foco y reuniones — graduada por profundidad/importancia (gris neutro → azul saturado → azul pálido). Las categorías que deben "saltar a la vista" contra ese fondo azul usan hues alejados en la rueda de color (verde, naranja, morado) y la de mayor urgencia usa amarillo — complementario del azul, el contraste de mayor visibilidad posible — reservado en exclusiva para deadlines:
 
-| Tipo de evento | Color Google Calendar | Cuándo usarlo |
-| --- | --- | --- |
-| Rutina / sistema | Graphite (grafito) | Triaje AM, Briefing review, EOD, cierre de día |
-| Bloque de foco | Peacock (pavo real) | Foco AM, Foco PM, Foco MIT, trabajo profundo |
-| Preparación | Tangerine (mandarina) | 🔖 Prep: [cualquier evento] |
-| Reunión externa / interlocutor clave | Blueberry (azul marino) | Reuniones con Gendarmería, GORE, donantes, directorio, aliados |
-| Reunión interna / equipo | Sage (salvia) | Comité interno, coordinación equipo Invictus |
-| Terreno / visita a cárcel | Basil (albahaca) | Entrada PENI, visita Mandela, Casa Maule, Ex Penitenciaría |
-| Formación / aprendizaje | Grape (morado) | Diplomado, cursos, capacitaciones |
-| Deadline / recordatorio | Banana (amarillo) | Fechas límite, vencimientos, recordatorios urgentes |
+| Tipo de evento | Color Google Calendar | Lógica de color | Cuándo usarlo |
+| --- | --- | --- | --- |
+| Rutina / sistema | Graphite (grafito) | Neutro — no compite visualmente con nada | Triaje AM, Briefing review, EOD, cierre de día |
+| Bloque de foco | Peacock (pavo real) | Azul saturado, familia del acento institucional | Foco AM, Foco PM, Foco MIT, trabajo profundo |
+| Reunión externa / interlocutor clave | Blueberry (azul marino) | Azul más profundo de la familia — el interlocutor externo es el compromiso de mayor peso | Reuniones con Gendarmería, GORE, donantes, directorio, aliados |
+| Reunión interna / equipo | Lavender (lavanda) | Mismo hue que Peacock/Blueberry pero pálido — "es reunión, es azul, pero es interna" sin confundirse con Terreno (verde) | Comité interno, coordinación equipo Invictus |
+| Preparación | Tangerine (mandarina) | Naranja — cálido, contrasta con el bloque azul, señal de "antesala" antes del evento principal | 🔖 Prep: [cualquier evento] |
+| Terreno / visita a cárcel | Basil (albahaca) | Verde — fuera de la familia azul a propósito, para no confundirse con ninguna reunión de oficina | Entrada PENI, visita Mandela, Casa Maule, Ex Penitenciaría |
+| Formación / aprendizaje | Grape (morado) | Morado — asociado a crecimiento/aprendizaje, sin solape de hue con ninguna otra categoría | Diplomado, cursos, capacitaciones |
+| Deadline / recordatorio | Banana (amarillo) | Amarillo — complementario del azul, máximo contraste posible en la paleta; se reserva solo para esto | Fechas límite, vencimientos, recordatorios urgentes |
+
+Nota de diseño: antes, Reunión interna usaba Sage (verde salvia), que en el vistazo rápido del calendario se confundía con Basil (Terreno) — ambos verdes, hues casi contiguos. Al mover Reunión interna a Lavender queda dentro de la misma familia azul que Foco y Reunión externa (coherente con que sigue siendo una reunión), pero clarísimamente distinta de Terreno, que es la única categoría verde.
 
 Regla de aplicación: al crear o modificar cualquier evento, asignar el color de esta tabla. Si un evento combina categorías (ej: reunión en terreno), primar el contexto más restrictivo (terreno > reunión externa > reunión interna).
 
@@ -479,7 +523,7 @@ Crear tarea en Tareas.csv (`collection://330b219e-3e6d-809d-8210-000b12719439`) 
 
 - `Tipo`: Inferir del proyecto asociado o del contexto. Default: "Operativo".
 
-- `Fecha límite`: Si fue especificada en la reunión, usarla. Si no, dejar vacía.
+- `Fecha límite`: Si fue especificada en la reunión, usarla. Si no, calcularla con el mecanismo de "NOTION — ASIGNACIÓN AUTOMÁTICA DE FECHA LÍMITE" — nunca dejar vacía.
 
 - `Notas`: "Origen: [Nombre de la reunión] — [Fecha de la reunión]".
 
@@ -516,7 +560,7 @@ Crear tarea en Tareas.csv con:
 
 - `Prioridad`: "Alta" si el correo es 🔴 o viene de un interlocutor clave; "Media" en el resto.
 
-- `Fecha límite`: el plazo que pida el correo, si lo hay (ya capturado al clasificar en PASO 1D). Si no hay plazo explícito, dejar vacía.
+- `Fecha límite`: el plazo que pida el correo, si lo hay (ya capturado al clasificar en PASO 1D). Si no hay plazo explícito, calcularla con el mecanismo de "NOTION — ASIGNACIÓN AUTOMÁTICA DE FECHA LÍMITE" — nunca dejar vacía.
 
 - `Origen`: "Correo".
 
@@ -534,7 +578,7 @@ Crear tarea en Tareas.csv con:
 
 ### 2B-bis) Registrar oportunidades de correos 🟢
 
-Para correos clasificados 🟢 (oportunidad/seguimiento, ver PASO 1D): crear tarea en Tareas.csv con `Estado`: "Siguiente" · `Prioridad`: "Media" (o "Alta" si involucra financiamiento/donante concreto) · `Origen`: "Correo" · `Tipo`: "Estrategia" o "Proyectos" según corresponda · `Notas`: resumen de la oportunidad + remitente + fecha. No crear borrador de respuesta salvo que el propio correo lo amerite (en ese caso, reclasifícalo como 🟡).
+Para correos clasificados 🟢 (oportunidad/seguimiento, ver PASO 1D): crear tarea en Tareas.csv con `Estado`: "Siguiente" · `Prioridad`: "Media" (o "Alta" si involucra financiamiento/donante concreto) · `Origen`: "Correo" · `Tipo`: "Estrategia" o "Proyectos" según corresponda · `Fecha límite`: calcularla con el mecanismo de "NOTION — ASIGNACIÓN AUTOMÁTICA DE FECHA LÍMITE" según la Prioridad asignada — nunca dejar vacía · `Notas`: resumen de la oportunidad + remitente + fecha. No crear borrador de respuesta salvo que el propio correo lo amerite (en ese caso, reclasifícalo como 🟡).
 
 
 
@@ -581,6 +625,8 @@ Registra para incluir en el briefing:
 - Tareas creadas directamente como macro + subtareas: [N] (si aplica).
 
 - Macro-tareas descompuestas por estancamiento: [N] (calculado en PASO 4B, se reporta acá).
+
+- Fecha límite calculada automáticamente: [N] tareas (ver "NOTION — ASIGNACIÓN AUTOMÁTICA DE FECHA LÍMITE").
 
 
 
@@ -726,7 +772,7 @@ Usa el modelo y la mecánica definidos en "NOTION — MACRO-TAREAS Y SUBTAREAS".
 
 **Límite:** máximo 1 descomposición automática por briefing (para no saturar Notion de una sola vez). Si hay más candidatas válidas, menciónalas en el briefing como "también estancadas, pendientes de descomponer" sin crear subtareas para ellas todavía.
 
-**Al descomponer:** sigue la mecánica de "NOTION — MACRO-TAREAS Y SUBTAREAS" (3–5 subtareas, verbo + objeto, una sesión, señal de "listo", heredar Prioridad/Tipo/Proyectos). Actualiza `Notas` de la macro-tarea agregando: "Descompuesta en subtareas el [FECHA_HOY]." La alerta correspondiente del PASO 4 para esa tarea, en vez del texto normal, dice: "'[nombre]' se descompuso en [N] subtareas — primer paso: '[nombre subtarea 1]'." con link a la macro-tarea en Notion.
+**Al descomponer:** sigue la mecánica de "NOTION — MACRO-TAREAS Y SUBTAREAS" (3–5 subtareas, verbo + objeto, una sesión, señal de "listo", heredar Prioridad/Tipo/Proyectos, `Fecha límite` distribuida en cascada según "NOTION — ASIGNACIÓN AUTOMÁTICA DE FECHA LÍMITE"). Actualiza `Notas` de la macro-tarea agregando: "Descompuesta en subtareas el [FECHA_HOY]." La alerta correspondiente del PASO 4 para esa tarea, en vez del texto normal, dice: "'[nombre]' se descompuso en [N] subtareas — primer paso: '[nombre subtarea 1]'." con link a la macro-tarea en Notion.
 
 
 
@@ -979,6 +1025,8 @@ Al recibir trigger:
 21. **MIT hoy es escritura, no solo lectura:** Ninguna MIT puede quedar solo en el correo o en el Calendar. Toda selección del PASO 3 se escribe en el campo `MIT hoy` de Notion vía PASO 3C, y los arrastres del día anterior se desmarcan en la misma pasada. Cuando la MIT es una subtarea, el checkbox va en la subtarea y nunca en su macro-tarea. Si el briefing menciona una MIT que no quedó marcada en Notion, el briefing está incompleto.
 
 22. **Macro-tareas y subtareas:** al crear cualquier tarea (PASO 2) o al detectar estancamiento crónico (PASO 4B), evalúa si conviene descomponerla en 3–5 subtareas atómicas en vez de dejarla como un solo bloque grande. Nunca descompongas una tarea que ya tiene subtareas abiertas, que es en sí misma una subtarea, o cuyo estancamiento es por dependencia externa y no por alcance mal dimensionado. Máximo 1 descomposición automática por briefing. Ver "NOTION — MACRO-TAREAS Y SUBTAREAS" y PASO 4B.
+
+23. **Fecha límite obligatoria:** ninguna tarea creada por el sistema (PASO 2A/2B/2B-bis) ni ninguna subtarea generada por el mecanismo de macro-tareas queda sin `Fecha límite`. Si no viene explícita desde la reunión o el correo de origen, se calcula distribuyéndola según prioridad y carga de los días cercanos — nunca se deja vacía "para decidir después". Ver "NOTION — ASIGNACIÓN AUTOMÁTICA DE FECHA LÍMITE".
 
 ---
 
