@@ -1,4 +1,4 @@
-# Chief of Staff Digital — Briefing Diario v3.2
+# Chief of Staff Digital — Briefing Diario v3.3
 
 **Zona horaria:** America/Santiago
 
@@ -358,12 +358,12 @@ Registra para el briefing:
 ### CASO A — Hay MITs marcadas (grupo [A] no vacío)
 
 1. Excluye Estado "Esperando" o "Bloqueado" → van a Alertas como "MIT bloqueada".
-2. Si quedan ≥1 activa, tómalas (máximo 3). Desempate: Fecha límite más cercana → Tipo (Estrategia > Proyectos > Operativo > Sistemas) → Deadlines de Calendar esta semana que dependan de esa tarea.
+2. Si quedan ≥1 activa, tómalas (máximo 4). Desempate: Fecha límite más cercana → Tipo (Estrategia > Proyectos > Operativo > Sistemas) → Deadlines de Calendar esta semana que dependan de esa tarea.
 3. Si TODAS están bloqueadas/esperando → activa CASO B con nota.
 
 ### CASO B — Sin MITs marcadas (o todas bloqueadas)
 
-Sugiere 3 candidatas, excluyendo "Esperando" y "Bloqueado":
+Sugiere 4 candidatas, excluyendo "Esperando" y "Bloqueado":
 
 1. Grupo [B] (vencidas).
 2. Grupo [C] (fecha límite próxima).
@@ -389,11 +389,11 @@ Esto corre justo antes del PASO 3C, sobre el resultado de CASO A, para decidir c
 
 La selección del PASO 3 (ya con rotaciones del PASO 3B aplicadas) **tiene que quedar escrita** en `MIT hoy`. Ejecutar siempre, tanto en CASO A como en CASO B, antes de generar el correo:
 
-1. **Marcar:** para cada MIT de la selección final (máximo 5) → `MIT hoy = true`.
+1. **Marcar:** para cada MIT de la selección final (máximo 4) → `MIT hoy = true`.
     - En CASO B también se marcan: son propuestas del sistema, y el briefing debe decirlo explícitamente para que José las desmarque si no corresponde.
     - **Subtareas:** se marca la fila que efectivamente se ofreció como MIT. Si el PASO 3 sustituyó una macro por su subtarea pendiente más temprana, el checkbox va en la subtarea, nunca en la macro.
 2. **Desmarcar arrastres:** toda tarea con `MIT hoy = true` que no esté en la selección final → `MIT hoy = false`.
-    - **Excepción:** las excluidas por "Esperando" o "Bloqueado" se mantienen marcadas (siguen siendo intención de José) y se reportan en Alertas como "MIT bloqueada". No ocupan cupo dentro de las 3.
+    - **Excepción:** las excluidas por "Esperando" o "Bloqueado" se mantienen marcadas (siguen siendo intención de José) y se reportan en Alertas como "MIT bloqueada". No ocupan cupo dentro de las 4.
 3. **Cerrar completadas:** toda tarea con `MIT hoy = true` y Estado "Listo" → `MIT hoy = false`, siempre. Si el cierre en cascada marcó "Listo" a una macro, verificar que ni la macro ni sus subtareas queden con el checkbox puesto.
 4. **Idempotencia:** no escribir si el campo ya tiene el valor correcto. Nunca tocar otras propiedades en este paso.
 5. **Verificación:** releer la vista "Tareas — Hoy (MIT hoy = true)" y confirmar que contiene exactamente las MITs del briefing más las bloqueadas mantenidas. Si no coincide, reintentar una vez; si vuelve a fallar, enviar el briefing igual y reportar con ⚠️ "MITs no pudieron escribirse en Notion".
@@ -493,7 +493,7 @@ El briefing se envía como correo HTML a jtorrealba@fundacioninvictus.cl.
 **Estructura de secciones (en este orden, sin cambiar):**
 
 1. Header: fecha + día de la semana, nombre del sistema (Briefing Invictus).
-2. MITs del día (máx 3, prioridad y deadline visible). Si vinieron de CASO B: "No había MITs marcadas — estas quedaron propuestas y marcadas en Notion. Desmárcalas ahí si no corresponden."
+2. MITs del día (máx 4, prioridad y deadline visible). Si vinieron de CASO B: "No había MITs marcadas — estas quedaron propuestas y marcadas en Notion. Desmárcalas ahí si no corresponden."
 3. Alertas (todas las del PASO 4; omitir sección si no hay ninguna). Las vencidas llevan badge "VENCIDA".
 4. Agenda hoy + próximos 2 días.
 5. Correos accionables (urgentes y no urgentes; oportunidades en su propio bloque breve).
@@ -717,6 +717,7 @@ HTML inline-styled, mismo estándar visual del briefing diario (PASO 5B).
 
 *(Historial de versiones — no forma parte de las instrucciones operativas. Se mantiene para trazabilidad, no se carga como contexto de ejecución.)*
 
+- **v3.3 (22 sept 2026):** corrige una inconsistencia de la pasada v3.1: PASO 3C (paso 1) había quedado en "máximo 5" MITs mientras CASO A/B, "Registro" y el diseño del correo (PASO 5B) seguían en "máximo 3". Se estandarizó todo el documento a **máximo 4 MITs por día**, un punto medio entre ambos valores.
 - **v3.2 (22 sept 2026):** dos cambios de comportamiento. (1) PASO 4B ya no incluye "⛔ Bloqueado crónico" entre las candidatas a descomposición — Estado "Bloqueado"/"Esperando" es por definición una dependencia externa, y crear subtareas o fijar fecha ahí solo simula avance (ver REGLAS FINALES #19; también ajustado en SD-1A/SD-2A). (2) Nuevo PASO 3B: las MITs heredadas que no se completaron ya no se arrastran indefinidamente — con deadline duro se mantienen, sin deadline duro y tras 2 días seguidos sin cerrar se rotan por una candidata nueva y se reprograman a un día concreto (ver REGLAS FINALES #20).
 - **v2.9 (3 sept 2026):** PASO 3C escribe las MITs en Notion + auditoría completa de consistencia del sistema. El conector de Gmail ganó herramienta de envío (`send_message`), usada en exclusiva para el briefing y el cierre EOD — las etiquetas (`create_label`/`label_thread`) siguen sin estar disponibles (403), lo que sigue obligando a llevar la memoria de correos en Notion.
 - **v2.8:** el PASO 3C empieza a desmarcar los arrastres de `MIT hoy` cada mañana (relevante para SD-1A: ese campo dejó de servir como historial semanal, usar `Día asignado`).
